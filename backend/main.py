@@ -7,16 +7,9 @@ import uvicorn
 import pandas as pd
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
 
 # Load environment variables
 load_dotenv()
-
-# Initialize OpenAI client
-client = None
-openai_api_key = os.getenv("OPENAI_API_KEY")
-if openai_api_key:
-    client = OpenAI(api_key=openai_api_key)
 
 app = FastAPI(title="Maintenance Wizard API")
 
@@ -115,8 +108,24 @@ async def analyze_equipment(request: QueryRequest):
         ]
         
         # Use OpenAI if API key is available
-        if client:
-            system_prompt = """You are a Lead Maintenance Engineer at an industrial plant. 
+        openai_api_key = os.getenv("OPENAI_API_KEY")
+        analysis = None
+        if openai_api_key:
+            try:
+                from openai import OpenAI
+                # Temporarily remove any proxy environment variables to prevent conflicts
+                saved_env = {}
+                for key in list(os.environ.keys()):
+                    if 'proxy' in key.lower():
+                        saved_env[key] = os.environ.pop(key)
+                
+                try:
+                    client = OpenAI(api_key=openai_api_key)
+                finally:
+                    # Restore the saved environment variables
+                    os.environ.update(saved_env)
+                
+                system_prompt = """You are a Lead Maintenance Engineer at an industrial plant. 
 You provide detailed, structured analysis in Markdown format.
 Always include:
 1. Equipment Status section with temperature, flow rate, health score
@@ -126,8 +135,8 @@ Always include:
 5. Safety Validation
 
 Use emojis sparingly for clarity."""
-            
-            user_prompt = f"""Equipment: {eq_id}
+                
+                user_prompt = f"""Equipment: {eq_id}
 - Temperature: {data['temp']}°C ({data['temp_trend']} from baseline)
 - Flow Rate: {data['flow']} m³/h ({data['flow_trend']} from optimal)
 - Health Score: {data['health']}/100 ({data['status']})
@@ -135,18 +144,22 @@ Use emojis sparingly for clarity."""
 User query: {request.query}
 
 Provide a comprehensive analysis in Markdown format."""
-            
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=0.7
-            )
-            analysis = response.choices[0].message.content
-        else:
-            # Fallback to mock response if no API key
+                
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0.7
+                )
+                analysis = response.choices[0].message.content
+            except Exception as e:
+                print(f"OpenAI API error: {e}")
+                analysis = None
+        
+        # Fallback to mock response if no API key or API failed
+        if not analysis:
             query_lower = request.query.lower()
             insights = []
             action_items = []
