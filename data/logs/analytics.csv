@@ -1,0 +1,6 @@
+timestamp,event_type,equipment_id,details,user_id
+2026-06-09T10:30:00,analysis_request,BF-01,User requested maintenance analysis,system
+2026-06-09T10:32:00,issue_resolved,BF-01,Maintenance issue resolved successfully,system
+2026-06-09T11:15:00,analysis_request,BF-02,User requested safety protocol check,system
+2026-06-09T11:16:00,issue_resolved,BF-02,Work order generated and dispatched,system
+2026-06-10T08:00:00,system_health_check,BF-01,System health check completed,system
