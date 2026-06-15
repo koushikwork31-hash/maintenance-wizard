@@ -48,6 +48,7 @@ import NotificationCenter from './components/NotificationCenter';
 import HealthScore from './components/HealthScore';
 import MaintenanceTimeline from './components/MaintenanceTimeline';
 import BlastFurnace2D from './components/BlastFurnace2D';
+import AIOptimizationSuggestions from './components/AIOptimizationSuggestions';
 import MaintenanceCalendar from './components/MaintenanceCalendar';
 import WorkOrderGenerator from './components/WorkOrderGenerator';
 import EquipmentComparison from './components/EquipmentComparison';
@@ -515,6 +516,9 @@ function AppContent() {
                   </ResponsiveContainer>
                 </div>
               </div>
+
+              {/* AI Optimization Suggestions */}
+              <AIOptimizationSuggestions isDark={isDark} selectedEq={selectedEq} />
             </motion.div>
           )}
 
