@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Sparkles, Trash2, Paperclip, Mic, StopCircle } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 const AIChat = ({ onSendMessage, isLoading, messages }) => {
   const [input, setInput] = useState('');
@@ -119,7 +120,13 @@ const AIChat = ({ onSendMessage, isLoading, messages }) => {
                       ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-tr-sm'
                       : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-tl-sm'
                   }`}>
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                    {message.role === 'user' ? (
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                    ) : (
+                      <div className="text-sm leading-relaxed [&>h1]:text-lg [&>h1]:font-bold [&>h1]:mb-2 [&>h2]:text-base [&>h2]:font-bold [&>h2]:mb-1 [&>h3]:text-sm [&>h3]:font-bold [&>h3]:mb-1 [&>p]:mb-2 [&>ul]:ml-4 [&>ul]:mb-2 [&>ol]:ml-4 [&>ol]:mb-2 [&>li]:mb-1 [&>code]:bg-slate-700 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded [&>pre]:bg-slate-700 [&>pre]:p-3 [&>pre]:rounded-lg [&>pre]:overflow-x-auto">
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      </div>
+                    )}
                   </div>
                   <span className="text-xs text-slate-500 px-1">
                     {message.timestamp?.toLocaleTimeString() || new Date().toLocaleTimeString()}

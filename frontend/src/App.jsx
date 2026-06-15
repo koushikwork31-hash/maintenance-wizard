@@ -55,7 +55,7 @@ import EquipmentComparison from './components/EquipmentComparison';
 import KPIDashboard from './components/KPIDashboard';
 import { ThemeProvider, useTheme } from './components/ThemeContext';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const EQUIPMENT_LIST = ['BF-01', 'BF-02', 'BF-03', 'BF-04', 'BF-05'];
 
