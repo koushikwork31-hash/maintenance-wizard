@@ -6,6 +6,17 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import pandas as pd
 import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# Load environment variables
+load_dotenv()
+
+# Initialize OpenAI client
+client = None
+openai_api_key = os.getenv("OPENAI_API_KEY")
+if openai_api_key:
+    client = OpenAI(api_key=openai_api_key)
 
 app = FastAPI(title="Maintenance Wizard API")
 
@@ -95,36 +106,68 @@ async def analyze_equipment(request: QueryRequest):
         
         data = equipment_data.get(eq_id, equipment_data["BF-01"])
         
-        # Query-specific insights
-        query_lower = request.query.lower()
-        insights = []
-        action_items = []
-        
-        if "temperature" in query_lower or "temp" in query_lower:
-            insights.append(f"Temperature analysis: Current temp is {data['temp']}°C, {data['temp_trend']} from baseline.")
-            action_items.append("Monitor temperature hourly for the next 24 hours.")
-        elif "flow" in query_lower or "pressure" in query_lower:
-            insights.append(f"Flow rate analysis: Current flow is {data['flow']} m³/h, {data['flow_trend']} from optimal.")
-            action_items.append("Check inlet/outlet valves for any obstructions.")
-        elif "safety" in query_lower:
-            insights.append("Safety protocols review: All LOTO and PPE requirements are up to date.")
-            action_items.append("Conduct a quick safety briefing with the maintenance team.")
-        elif "maintenance" in query_lower or "service" in query_lower:
-            insights.append("Maintenance history review: Last scheduled maintenance was 3 weeks ago.")
-            action_items.append("Schedule preventive maintenance if health score drops below 70.")
-        else:
-            insights.append("Comprehensive analysis: Reviewing all telemetry, maintenance, and safety data.")
-            action_items.append("Prioritize actions based on health score and criticality.")
-        
-        # Mock response
+        # Mock debate log
         debate_log = [
             {"agent": "Analyst", "msg": f"Detected anomalies on {eq_id}. Recommend immediate review."},
             {"agent": "Reliability", "msg": f"Checking historical records for {eq_id} for similar patterns."},
             {"agent": "Safety", "msg": "All safety protocols must be followed before any intervention."},
-            {"agent": "Lead", "msg": "Consensus reached. Proceeding with recommended actions."}
+            {"agent": "Lead", "msg": "Conflict resolved. Proceeding with recommended actions."}
         ]
         
-        analysis = f"""### 🛠️ Lead Engineer's Autonomous Assessment (Multi-Agent Synthesis)
+        # Use OpenAI if API key is available
+        if client:
+            system_prompt = """You are a Lead Maintenance Engineer at an industrial plant. 
+You provide detailed, structured analysis in Markdown format.
+Always include:
+1. Equipment Status section with temperature, flow rate, health score
+2. Query Insights section
+3. Root Cause Analysis
+4. Recommended Actions
+5. Safety Validation
+
+Use emojis sparingly for clarity."""
+            
+            user_prompt = f"""Equipment: {eq_id}
+- Temperature: {data['temp']}°C ({data['temp_trend']} from baseline)
+- Flow Rate: {data['flow']} m³/h ({data['flow_trend']} from optimal)
+- Health Score: {data['health']}/100 ({data['status']})
+
+User query: {request.query}
+
+Provide a comprehensive analysis in Markdown format."""
+            
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.7
+            )
+            analysis = response.choices[0].message.content
+        else:
+            # Fallback to mock response if no API key
+            query_lower = request.query.lower()
+            insights = []
+            action_items = []
+            
+            if "temperature" in query_lower or "temp" in query_lower:
+                insights.append(f"Temperature analysis: Current temp is {data['temp']}°C, {data['temp_trend']} from baseline.")
+                action_items.append("Monitor temperature hourly for the next 24 hours.")
+            elif "flow" in query_lower or "pressure" in query_lower:
+                insights.append(f"Flow rate analysis: Current flow is {data['flow']} m³/h, {data['flow_trend']} from optimal.")
+                action_items.append("Check inlet/outlet valves for any obstructions.")
+            elif "safety" in query_lower:
+                insights.append("Safety protocols review: All LOTO and PPE requirements are up to date.")
+                action_items.append("Conduct a quick safety briefing with the maintenance team.")
+            elif "maintenance" in query_lower or "service" in query_lower:
+                insights.append("Maintenance history review: Last scheduled maintenance was 3 weeks ago.")
+                action_items.append("Schedule preventive maintenance if health score drops below 70.")
+            else:
+                insights.append("Comprehensive analysis: Reviewing all telemetry, maintenance, and safety data.")
+                action_items.append("Prioritize actions based on health score and criticality.")
+            
+            analysis = f"""### 🛠️ Lead Engineer's Autonomous Assessment (Multi-Agent Synthesis)
 
 #### **Equipment Status: {eq_id}**
 - **Temperature**: {data['temp']}°C ({data['temp_trend']} from baseline)
