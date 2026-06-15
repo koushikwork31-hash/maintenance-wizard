@@ -49,7 +49,6 @@ import HealthScore from './components/HealthScore';
 import MaintenanceTimeline from './components/MaintenanceTimeline';
 import BlastFurnace2D from './components/BlastFurnace2D';
 import AIOptimizationSuggestions from './components/AIOptimizationSuggestions';
-import Industrial3DShowcase from './components/Industrial3DShowcase';
 import MaintenanceCalendar from './components/MaintenanceCalendar';
 import WorkOrderGenerator from './components/WorkOrderGenerator';
 import EquipmentComparison from './components/EquipmentComparison';
@@ -520,9 +519,6 @@ function AppContent() {
 
               {/* AI Optimization Suggestions */}
               <AIOptimizationSuggestions isDark={isDark} selectedEq={selectedEq} />
-
-              {/* Industrial 3D Showcase */}
-              <Industrial3DShowcase isDark={isDark} />
             </motion.div>
           )}
 
