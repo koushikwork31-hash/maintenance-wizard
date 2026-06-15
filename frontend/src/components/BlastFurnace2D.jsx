@@ -265,26 +265,26 @@ export default function BlastFurnace2D({ equipmentId, isFaultMode }) {
         </div>
 
         {/* Sensor Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Temperature */}
           <motion.div 
-            className="p-6 rounded-2xl bg-slate-800/70 border border-slate-700"
-            whileHover={{ scale: 1.05, y: -4 }}
+            className="p-5 rounded-2xl bg-slate-800/70 border border-slate-700"
+            whileHover={{ scale: 1.03, y: -3 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <Thermometer className="w-6 h-6 text-orange-400" />
-              <span className="text-sm font-black text-slate-400 uppercase tracking-wider">Hot Blast Temp</span>
+            <div className="flex items-center gap-2 mb-3">
+              <Thermometer className="w-5 h-5 text-orange-400" />
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Hot Blast Temp</span>
             </div>
             <motion.div 
-              className="text-3xl font-black text-white mb-3"
+              className="text-4xl font-black text-white mb-2"
               key={temp}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
             >
               {Math.round(temp)}°C
             </motion.div>
-            <div className="w-full h-3 bg-slate-700 rounded-full mt-2 overflow-hidden">
+            <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
               <motion.div 
                 className={`h-full rounded-full transition-all duration-700 ${
                   temp > 1500 ? 'bg-gradient-to-r from-red-500 to-rose-500' : temp > 1300 ? 'bg-gradient-to-r from-orange-500 to-amber-500' : 'bg-gradient-to-r from-green-500 to-emerald-500'
@@ -297,23 +297,23 @@ export default function BlastFurnace2D({ equipmentId, isFaultMode }) {
 
           {/* Pressure */}
           <motion.div 
-            className="p-6 rounded-2xl bg-slate-800/70 border border-slate-700"
-            whileHover={{ scale: 1.05, y: -4 }}
+            className="p-5 rounded-2xl bg-slate-800/70 border border-slate-700"
+            whileHover={{ scale: 1.03, y: -3 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <Activity className="w-6 h-6 text-blue-400" />
-              <span className="text-sm font-black text-slate-400 uppercase tracking-wider">Internal Pressure</span>
+            <div className="flex items-center gap-2 mb-3">
+              <Activity className="w-5 h-5 text-blue-400" />
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Internal Pressure</span>
             </div>
             <motion.div 
-              className="text-3xl font-black text-white mb-3"
+              className="text-4xl font-black text-white mb-2"
               key={pressure}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
             >
               {pressure.toFixed(1)} bar
             </motion.div>
-            <div className="w-full h-3 bg-slate-700 rounded-full mt-2 overflow-hidden">
+            <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
               <motion.div 
                 className={`h-full rounded-full transition-all duration-700 ${
                   pressure > 6 ? 'bg-gradient-to-r from-red-500 to-rose-500' : pressure > 5 ? 'bg-gradient-to-r from-orange-500 to-amber-500' : 'bg-gradient-to-r from-blue-500 to-cyan-500'
@@ -326,23 +326,23 @@ export default function BlastFurnace2D({ equipmentId, isFaultMode }) {
 
           {/* Gas Flow */}
           <motion.div 
-            className="p-6 rounded-2xl bg-slate-800/70 border border-slate-700"
-            whileHover={{ scale: 1.05, y: -4 }}
+            className="p-5 rounded-2xl bg-slate-800/70 border border-slate-700"
+            whileHover={{ scale: 1.03, y: -3 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <Flame className="w-6 h-6 text-yellow-400" />
-              <span className="text-sm font-black text-slate-400 uppercase tracking-wider">Gas Flow</span>
+            <div className="flex items-center gap-2 mb-3">
+              <Flame className="w-5 h-5 text-yellow-400" />
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Gas Flow</span>
             </div>
             <motion.div 
-              className="text-3xl font-black text-white mb-3"
+              className="text-4xl font-black text-white mb-2"
               key={gasFlow}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
             >
               {Math.round(gasFlow)}%
             </motion.div>
-            <div className="w-full h-3 bg-slate-700 rounded-full mt-2 overflow-hidden">
+            <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
               <motion.div 
                 className={`h-full rounded-full transition-all duration-700 ${
                   gasFlow < 60 ? 'bg-gradient-to-r from-red-500 to-rose-500' : gasFlow < 75 ? 'bg-gradient-to-r from-orange-500 to-amber-500' : 'bg-gradient-to-r from-yellow-500 to-orange-500'
@@ -355,23 +355,23 @@ export default function BlastFurnace2D({ equipmentId, isFaultMode }) {
 
           {/* Coolant Flow */}
           <motion.div 
-            className="p-6 rounded-2xl bg-slate-800/70 border border-slate-700"
-            whileHover={{ scale: 1.05, y: -4 }}
+            className="p-5 rounded-2xl bg-slate-800/70 border border-slate-700"
+            whileHover={{ scale: 1.03, y: -3 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <Droplets className="w-6 h-6 text-cyan-400" />
-              <span className="text-sm font-black text-slate-400 uppercase tracking-wider">Coolant Flow</span>
+            <div className="flex items-center gap-2 mb-3">
+              <Droplets className="w-5 h-6 text-cyan-400" />
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Coolant Flow</span>
             </div>
             <motion.div 
-              className="text-3xl font-black text-white mb-3"
+              className="text-4xl font-black text-white mb-2"
               key={coolantFlow}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
             >
               {Math.round(coolantFlow)}%
             </motion.div>
-            <div className="w-full h-3 bg-slate-700 rounded-full mt-2 overflow-hidden">
+            <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
               <motion.div 
                 className={`h-full rounded-full transition-all duration-700 ${
                   coolantFlow < 40 ? 'bg-gradient-to-r from-red-500 to-rose-500' : coolantFlow < 55 ? 'bg-gradient-to-r from-orange-500 to-amber-500' : 'bg-gradient-to-r from-cyan-500 to-blue-500'
